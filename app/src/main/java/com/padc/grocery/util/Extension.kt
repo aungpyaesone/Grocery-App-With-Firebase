@@ -1,33 +1,31 @@
 package com.padc.grocery.util
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
+import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import androidx.fragment.app.FragmentActivity
-import java.io.ByteArrayOutputStream
-import java.lang.Exception
+import android.util.Base64
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.padc.grocery.R
+import java.io.ByteArrayInputStream
 
-fun Uri.convertUritoBitmap(context: Context): Bitmap?{
-    try {
-        if (Build.VERSION.SDK_INT >= 29) {
-            val source: ImageDecoder.Source =
-                ImageDecoder.createSource(context.contentResolver, this)
-            val bitmap = ImageDecoder.decodeBitmap(source)
-            return bitmap
-            //  mPresenter.onTapAddGrocery(groceryVO = groceryVO, bitmap = bitmap)
-        } else {
-            val bitmap = MediaStore.Images.Media.getBitmap(
-                context.contentResolver,
-                this
-            )
-            return bitmap
-            //  mPresenter.onTapAddGrocery(groceryVO,bitmap)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
+
+fun String.convertToBitMap():Bitmap?{
+    try{
+        val byte = Base64.decode(this,Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeStream(ByteArrayInputStream(byte))
+        return bitmap
+    }catch (e: Exception){
+        e.message
         return null
     }
 }
+
+fun ImageView.load(uri: Uri){
+    Glide.with(context)
+        .asBitmap()
+        .load(uri)
+        .placeholder(R.drawable.ic_baseline_image_24)
+        .into(this)
+}
+

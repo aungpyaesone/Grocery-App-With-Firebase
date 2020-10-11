@@ -11,5 +11,5 @@ interface MainPresenter : BasePresenter<MainView>, GroceryViewItemActionDelegate
 
     fun onPhotoTaken(bitmap: Bitmap)
 
-    fun onTabImageView(tapFrom: Int)
+    fun onTabImageView()
 }

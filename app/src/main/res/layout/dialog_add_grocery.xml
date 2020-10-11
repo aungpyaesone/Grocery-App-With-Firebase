@@ -79,6 +79,7 @@
         android:layout_width="0dp"
         android:layout_height="128dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/ic_baseline_image_24"
         android:layout_marginTop="@dimen/margin_medium_2"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
         app:layout_constraintStart_toStartOf="@+id/textInputLayout3"

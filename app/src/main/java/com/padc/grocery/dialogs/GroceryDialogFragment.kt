@@ -1,7 +1,6 @@
 package com.padc.grocery.dialogs
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,21 +12,20 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.padc.grocery.R
-import com.padc.grocery.activities.MainActivity
 import com.padc.grocery.data.vos.GroceryVO
 import com.padc.grocery.mvp.presenters.Impls.MainPresenterImpl
 import com.padc.grocery.mvp.presenters.MainPresenter
-import com.padc.grocery.util.convertUritoBitmap
+import com.padc.grocery.util.convertToBitMap
+import com.padc.grocery.util.load
 import kotlinx.android.synthetic.main.dialog_add_grocery.*
 import kotlinx.android.synthetic.main.dialog_add_grocery.view.*
+import java.io.File
 import java.io.IOException
-import java.lang.ClassCastException
-import java.lang.Exception
-import kotlin.math.PI
 
 class GroceryDialogFragment : DialogFragment() {
 
@@ -37,7 +35,7 @@ class GroceryDialogFragment : DialogFragment() {
         const val BUNDLE_DESCRIPTION = "BUNDLE_DESCRIPTION"
         const val BUNDLE_AMOUNT = "BUNDLE_AMOUNT"
         const val BUNDLE_IMAGE = "BUNDLE_IMAGE"
-        const val BUNDLE_BITMAP = "BUNDLE_BITMAP"
+       // const val BUNDLE_BITMAP = "BUNDLE_BITMAP"
 
         const val PICK_IMAGE_FROM_DIALOG = 2222
 
@@ -50,16 +48,6 @@ class GroceryDialogFragment : DialogFragment() {
     val groceryVO = GroceryVO()
     private var mbitMap : Bitmap? = null
 
-    private var monPhotoReceiveListener : onPhotoReceiveListener? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-//        try {
-//            monPhotoReceiveListener = activity as onPhotoReceiveListener
-//        }catch (e: ClassCastException){
-//
-//        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,19 +64,14 @@ class GroceryDialogFragment : DialogFragment() {
         view.etGroceryName?.setText(arguments?.getString(BUNDLE_NAME))
         view.etDescription?.setText(arguments?.getString(BUNDLE_DESCRIPTION))
         view.etAmount?.setText(arguments?.getString(BUNDLE_AMOUNT))
-        Glide.with(view.context)
-            .load(arguments?.getString(BUNDLE_IMAGE))
-            .placeholder(R.drawable.ic_baseline_image_24)
-            .into(imageView)
-
+        arguments?.getString(BUNDLE_IMAGE)?.toUri()?.let { imageView.load(it) }
 
         view.btnAddGrocery.setOnClickListener {
-            groceryVO.name =  etGroceryName.text.toString()
+            groceryVO.name =  etGroceryName?.text.toString()
             groceryVO.amount = etAmount.text.toString().toInt()
             groceryVO.description = etDescription.text.toString()
-
-            mbitMap?.let { bitmap ->
-                mPresenter.onTapAddGrocery(groceryVO, bitmap)
+            mbitMap?.let {
+                mPresenter.onTapAddGrocery(groceryVO,it)
             }
             dismiss()
         }
@@ -131,9 +114,7 @@ class GroceryDialogFragment : DialogFragment() {
                         val bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, it
                         )
                         mbitMap =  bitmap
-                        val imageString = activity?.contentResolver?.openInputStream(filePath)
-                        val photo = BitmapFactory.decodeStream(imageString)
-                        imageView.setImageBitmap(photo)
+                        imageView.load(it)
                     }
                 }
 
@@ -143,9 +124,5 @@ class GroceryDialogFragment : DialogFragment() {
         }
     }
 
-    interface onPhotoReceiveListener{
-        fun getBitImage(bitmap: Bitmap)
-        fun getImagePath(imagePath: String)
-    }
 
 }

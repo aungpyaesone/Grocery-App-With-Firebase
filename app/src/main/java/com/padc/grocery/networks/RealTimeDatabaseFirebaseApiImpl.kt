@@ -36,8 +36,9 @@ object RealTimeDatabaseFirebaseApiImpl : FirebaseApi {
         })
     }
 
-    override fun addGrocery(name: String, description: String, amount: Int,image: String) {
-        database.child("groceries").child(name).setValue(GroceryVO(name, description, amount,image))
+    override fun addGrocery(name: String, description: String, amount: Int, image: String) {
+        database.child("groceries").child(name)
+            .setValue(GroceryVO(name, description, amount, image))
     }
 
     override fun deleteGrocery(name: String) {
@@ -46,22 +47,27 @@ object RealTimeDatabaseFirebaseApiImpl : FirebaseApi {
 
     override fun uploadImageAndEditGrocery(image: Bitmap, grocery: GroceryVO) {
         val baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG,100, baos)
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
 
         val imageRef = storageReference.child("images/${UUID.randomUUID()}")
         val uploadTask = imageRef.putBytes(data)
-        uploadTask.addOnFailureListener{
+        uploadTask.addOnFailureListener {
             //
         }.addOnSuccessListener {
             //
         }
 
-        val urlTask = uploadTask.continueWithTask{
+        val urlTask = uploadTask.continueWithTask {
             return@continueWithTask imageRef.downloadUrl
-        }.addOnCompleteListener{
+        }.addOnCompleteListener {
             val imageUrl = it.result?.toString()
-            addGrocery(grocery.name ?:"",grocery.description ?:"",grocery.amount ?:0, imageUrl ?: "")
+            addGrocery(
+                grocery.name ?: "",
+                grocery.description ?: "",
+                grocery.amount ?: 0,
+                imageUrl ?: ""
+            )
         }
     }
 }

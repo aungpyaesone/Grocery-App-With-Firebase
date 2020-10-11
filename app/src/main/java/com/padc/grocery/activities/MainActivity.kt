@@ -14,20 +14,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.padc.grocery.R
-import com.padc.grocery.activities.MainActivity.Companion.PICK_IMAGE_REQUEST
 import com.padc.grocery.adapters.GroceryAdapter
 import com.padc.grocery.data.vos.GroceryVO
 import com.padc.grocery.dialogs.GroceryDialogFragment
-import com.padc.grocery.dialogs.GroceryDialogFragment.Companion.BUNDLE_BITMAP
 import com.padc.grocery.dialogs.GroceryDialogFragment.Companion.BUNDLE_IMAGE
 import com.padc.grocery.mvp.presenters.Impls.MainPresenterImpl
 import com.padc.grocery.mvp.presenters.MainPresenter
 import com.padc.grocery.mvp.views.MainView
-import com.padc.grocery.util.convertUritoBitmap
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_add_grocery.*
 import java.io.IOException
-import java.lang.Exception
 
 class MainActivity : BaseActivity(), MainView {
 
@@ -37,7 +32,6 @@ class MainActivity : BaseActivity(), MainView {
 
     companion object {
         const val PICK_IMAGE_REQUEST = 1111
-        const val PICK_IMAGE_FROM_DIALOG = 2222
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +108,7 @@ class MainActivity : BaseActivity(), MainView {
         Snackbar.make(window.decorView, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun openGallery(openFrom: Int) {
+    override fun openGallery() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT

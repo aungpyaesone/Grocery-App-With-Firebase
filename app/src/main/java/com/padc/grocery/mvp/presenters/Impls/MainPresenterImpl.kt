@@ -24,8 +24,8 @@ class MainPresenterImpl : MainPresenter,AbstractBasePresenter<MainView>() {
         }
     }
 
-    override fun onTabImageView(tapFrom: Int) {
-        mView.openGallery(tapFrom)
+    override fun onTabImageView() {
+        mView.openGallery()
     }
 
     override fun onUiReady(owner: LifecycleOwner) {
@@ -49,6 +49,6 @@ class MainPresenterImpl : MainPresenter,AbstractBasePresenter<MainView>() {
 
     override fun onTapFileUpload(grocery: GroceryVO,tapFrom: Int) {
         mChosenGroceryForFileUpload = grocery
-        mView.openGallery(tapFrom)
+        mView.openGallery()
     }
 }
