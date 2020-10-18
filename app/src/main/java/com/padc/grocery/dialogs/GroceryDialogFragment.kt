@@ -3,9 +3,7 @@ package com.padc.grocery.dialogs
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,16 +13,13 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
 import com.padc.grocery.R
 import com.padc.grocery.data.vos.GroceryVO
-import com.padc.grocery.mvp.presenters.Impls.MainPresenterImpl
+import com.padc.grocery.mvp.presenters.impls.MainPresenterImpl
 import com.padc.grocery.mvp.presenters.MainPresenter
-import com.padc.grocery.util.convertToBitMap
 import com.padc.grocery.util.load
 import kotlinx.android.synthetic.main.dialog_add_grocery.*
 import kotlinx.android.synthetic.main.dialog_add_grocery.view.*
-import java.io.File
 import java.io.IOException
 
 class GroceryDialogFragment : DialogFragment() {

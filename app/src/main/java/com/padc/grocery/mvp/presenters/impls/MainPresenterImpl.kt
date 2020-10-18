@@ -1,4 +1,4 @@
-package com.padc.grocery.mvp.presenters.Impls
+package com.padc.grocery.mvp.presenters.impls
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LifecycleOwner
@@ -7,10 +7,13 @@ import com.padc.grocery.data.vos.GroceryVO
 import com.padc.grocery.mvp.presenters.AbstractBasePresenter
 import com.padc.grocery.mvp.presenters.MainPresenter
 import com.padc.grocery.mvp.views.MainView
+import com.padc.grocery.networks.auth.AuthManager
+import com.padc.grocery.networks.auth.AuthenticationManagerImpl
 
 class MainPresenterImpl : MainPresenter,AbstractBasePresenter<MainView>() {
     private val mGroceryModel = GroceryModelImpl
     private var mChosenGroceryForFileUpload : GroceryVO? = null
+    private val mAuthModel: AuthManager = AuthenticationManagerImpl
 
     override fun onTapAddGrocery(groceryVO: GroceryVO, bitmap: Bitmap) {
        // mChosenGroceryForFileUpload = groceryVO
@@ -28,6 +31,11 @@ class MainPresenterImpl : MainPresenter,AbstractBasePresenter<MainView>() {
         mView.openGallery()
     }
 
+    private fun getUserNameAndShowInView() {
+       val userName = mAuthModel.getUserName()
+       mView.showUserName(userName)
+    }
+
     override fun onUiReady(owner: LifecycleOwner) {
         mGroceryModel.getGroceries(
             onSuccess = {
@@ -37,6 +45,10 @@ class MainPresenterImpl : MainPresenter,AbstractBasePresenter<MainView>() {
                 mView.showErrorMessage(it)
             }
         )
+        getUserNameAndShowInView()
+        mView.displayToolbarTitle(mGroceryModel.getAppNameFromRemoteConfig())
+        mView.displayViewType(mGroceryModel.getViewType())
+
     }
 
     override fun onTapDeleteGrocery(name: String) {
@@ -44,7 +56,7 @@ class MainPresenterImpl : MainPresenter,AbstractBasePresenter<MainView>() {
     }
 
     override fun onTapEditGrocery(name: String, description: String, amount: Int,image: String) {
-      mView.showGroceryDialog(name,description,amount.toString(),image)
+       mView.showGroceryDialog(name,description,amount.toString(),image)
     }
 
     override fun onTapFileUpload(grocery: GroceryVO,tapFrom: Int) {

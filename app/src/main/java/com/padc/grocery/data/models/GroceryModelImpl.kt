@@ -5,11 +5,15 @@ import com.padc.grocery.data.vos.GroceryVO
 import com.padc.grocery.networks.FirebaseApi
 import com.padc.grocery.networks.RealTimeCloudFireStoreApiImpl
 import com.padc.grocery.networks.RealTimeDatabaseFirebaseApiImpl
+import com.padc.grocery.networks.auth.AuthManager
+import com.padc.grocery.networks.auth.AuthenticationManagerImpl
+import com.padc.grocery.networks.remoteconfig.FirebaseRemoteConfigManager
 
 object GroceryModelImpl : GroceryModel {
    // override var mFirebaseApi: FirebaseApi = RealTimeDatabaseFirebaseApiImpl
     override var mFirebaseApi: FirebaseApi = RealTimeCloudFireStoreApiImpl
 
+    override var mfirebaseRemoteConfigManager: FirebaseRemoteConfigManager = FirebaseRemoteConfigManager
 
     override fun getGroceries(onSuccess: (List<GroceryVO>) -> Unit, onFaiure: (String) -> Unit) {
         mFirebaseApi.getGroceries(onSuccess,onFaiure)
@@ -30,4 +34,21 @@ object GroceryModelImpl : GroceryModel {
     override fun uploadImageAndUpdateGrocery(grocery: GroceryVO, image: Bitmap) {
         mFirebaseApi.uploadImageAndEditGrocery(image,grocery)
     }
+
+    override fun setupRemoteConfigWithDefaultValues() {
+        mfirebaseRemoteConfigManager.setupRemoteConfigWithDefaultValues()
+    }
+
+    override fun fetchRemoteConfig() {
+        mfirebaseRemoteConfigManager.fetchRemoteConfig()
+    }
+
+    override fun getAppNameFromRemoteConfig() :String {
+        return mfirebaseRemoteConfigManager.getToolbarName()
+    }
+
+    override fun getViewType(): Int {
+        return mfirebaseRemoteConfigManager.getViewType()
+    }
+
 }

@@ -1,16 +1,17 @@
 package com.padc.grocery.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.media.MediaDataSource
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.padc.grocery.R
@@ -18,7 +19,7 @@ import com.padc.grocery.adapters.GroceryAdapter
 import com.padc.grocery.data.vos.GroceryVO
 import com.padc.grocery.dialogs.GroceryDialogFragment
 import com.padc.grocery.dialogs.GroceryDialogFragment.Companion.BUNDLE_IMAGE
-import com.padc.grocery.mvp.presenters.Impls.MainPresenterImpl
+import com.padc.grocery.mvp.presenters.impls.MainPresenterImpl
 import com.padc.grocery.mvp.presenters.MainPresenter
 import com.padc.grocery.mvp.views.MainView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,9 +30,12 @@ class MainActivity : BaseActivity(), MainView {
     private lateinit var mAdapter: GroceryAdapter
     private lateinit var mPresenter: MainPresenter
 
-
     companion object {
         const val PICK_IMAGE_REQUEST = 1111
+
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +46,6 @@ class MainActivity : BaseActivity(), MainView {
         setUpRecyclerView()
 
         setUpActionListeners()
-
         mPresenter.onUiReady(this)
 
     }
@@ -57,8 +60,6 @@ class MainActivity : BaseActivity(), MainView {
     private fun setUpRecyclerView() {
         mAdapter = GroceryAdapter(mPresenter)
         rvGroceries.adapter = mAdapter
-        rvGroceries.layoutManager =
-            LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun setUpPresenter() {
@@ -120,6 +121,27 @@ class MainActivity : BaseActivity(), MainView {
 
     }
 
+    @SuppressLint("SetTextI18n")
+    override fun showUserName(name: String) {
+        tvUserName.text = "Hello $name"
+    }
+
+    override fun displayToolbarTitle(title: String) {
+        supportActionBar?.title = title
+    }
+
+    override fun displayViewType(viewType: Int) {
+        when(viewType){
+            0 ->{rvGroceries.apply {
+               layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+               mAdapter.setViewType(viewType)
+            }}
+            1 ->{rvGroceries.apply {
+                layoutManager = GridLayoutManager(applicationContext,2)
+                mAdapter.setViewType(viewType)
+            }}
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

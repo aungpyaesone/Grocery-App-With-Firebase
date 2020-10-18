@@ -7,4 +7,7 @@ interface MainView : BaseView {
     fun showGroceryDialog(name: String, description: String, amount: String,image: String)
     fun showErrorMessage(message: String)
     fun openGallery()
+    fun showUserName(name:String)
+    fun displayToolbarTitle(title:String)
+    fun displayViewType(viewType:Int)
 }
