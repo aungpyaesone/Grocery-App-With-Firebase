@@ -44,14 +44,12 @@ object RealTimeCloudFireStoreApiImpl : FirebaseApi{
                     val result = value?.documents ?: arrayListOf()
                 for(document in result){
                     val data = document.data
-                    data?.let {
 
-                    }
                     val grocery = GroceryVO()
                     grocery.name = data?.get("name") as String
                     grocery.description = data["description"] as String
                     grocery.amount = (data["amount"] as Long).toInt()
-                    grocery.image = data["image"] as String?
+                    grocery.image = data["image"] as String
                     grodericeList.add(grocery)
                 }
                 onSuccess(grodericeList)

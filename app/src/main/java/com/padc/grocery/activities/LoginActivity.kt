@@ -3,6 +3,10 @@ package com.padc.grocery.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import com.google.firebase.abt.FirebaseABTesting
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.padc.grocery.R
 import com.padc.grocery.mvp.presenters.LoginPresenter
 import com.padc.grocery.mvp.presenters.impls.LoginPresenterImpl
@@ -27,12 +31,17 @@ class LoginActivity : BaseActivity(), LoginView {
         setUpPresenter()
         setUpActionListeners()
 
-        mPresenter.onUiReady(this)
+       FirebaseMessaging.getInstance().token.addOnCompleteListener {
+           Log.d("token",it.result)
+       }
+        mPresenter.onUiReady(this, this)
+
     }
 
     private fun setUpActionListeners() {
         btnLogin.setOnClickListener {
-            mPresenter.onTapLogin(etEmail.text.toString(), etPassword.text.toString())
+          mPresenter.onTapLogin(this, etEmail.text.toString(), etPassword.text.toString())
+
         }
 
         btnRegister.setOnClickListener {

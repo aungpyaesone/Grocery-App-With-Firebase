@@ -2,7 +2,6 @@ package com.padc.grocery.activities
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.padc.grocery.R
 import com.padc.grocery.mvp.presenters.RegisterPresenter
@@ -30,12 +29,13 @@ class RegisterActivity : BaseActivity(), RegisterView {
 
     private fun setUpActionListeners() {
         btnRegister.setOnClickListener {
-            mPresenter.onTapRegister(
-                etEmail.text.toString(),
-                etPassword.text.toString(),
-                etUserName.text.toString()
-            )
-        }
+                mPresenter.onTapRegister(
+                    this,
+                    etEmail.text.toString(),
+                    etPassword.text.toString(),
+                    etUserName.text.toString()
+                )
+            }
     }
 
     private fun setUpPresenter() {

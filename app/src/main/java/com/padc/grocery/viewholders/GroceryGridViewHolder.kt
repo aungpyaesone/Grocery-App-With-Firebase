@@ -4,7 +4,8 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.padc.grocery.data.vos.GroceryVO
 import com.padc.grocery.delegates.GroceryViewItemActionDelegate
-import kotlinx.android.synthetic.main.view_holder_grocery_item.view.*
+import kotlinx.android.synthetic.main.view_holder_gird_grocery_item.view.*
+
 
 class GroceryGridViewHolder(itemView: View, private val mDelegate: GroceryViewItemActionDelegate) :
     BaseViewHolder<GroceryVO>(itemView) {

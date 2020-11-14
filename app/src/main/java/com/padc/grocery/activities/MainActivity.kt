@@ -8,12 +8,16 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.padc.grocery.R
 import com.padc.grocery.adapters.GroceryAdapter
 import com.padc.grocery.data.vos.GroceryVO
@@ -24,6 +28,7 @@ import com.padc.grocery.mvp.presenters.MainPresenter
 import com.padc.grocery.mvp.views.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
+import java.lang.RuntimeException
 
 class MainActivity : BaseActivity(), MainView {
 
@@ -46,8 +51,37 @@ class MainActivity : BaseActivity(), MainView {
         setUpRecyclerView()
 
         setUpActionListeners()
-        mPresenter.onUiReady(this)
+        mPresenter.onUiReady(this, this)
 
+      //  addCrashButton()
+
+        FirebaseDynamicLinks.getInstance()
+            .getDynamicLink(intent)
+            .addOnSuccessListener {
+                it?.let {pendingDynamicLinkData ->
+                    val deepLinks = pendingDynamicLinkData.link
+                    deepLinks?.let {deepLink ->
+                        Log.d("deepLink",deepLink.toString())
+                    }
+
+                }
+            }.addOnFailureListener {
+                Log.d("error",it.localizedMessage)
+            }
+
+    }
+
+    private fun addCrashButton(){
+        val crashButton = Button(this)
+        crashButton.text = "Crash !"
+        crashButton.setOnClickListener {
+            throw RuntimeException("Test Crash") // force to crash
+        }
+
+        addContentView(crashButton,ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
     }
 
     private fun setUpActionListeners() {

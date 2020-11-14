@@ -29,5 +29,6 @@ class GroceryViewHolder(itemView: View, private val mDelegate: GroceryViewItemAc
         Glide.with(itemView.context)
             .load(data.image)
             .into(itemView.ivGroceryImage)
+        
     }
 }
